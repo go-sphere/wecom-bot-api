@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	wecombot "github.com/TBXark/wecom-bot-api"
 	"github.com/gin-gonic/gin"
+	wecombot "github.com/tbxark/wecom-bot-api"
 )
 
 var (
