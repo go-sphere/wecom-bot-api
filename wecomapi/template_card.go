@@ -54,7 +54,7 @@ package wecomapi
 //
 // 官方文档：https://developer.work.weixin.qq.com/document/path/101031#59098
 type TemplateCard struct {
-	CardType              string              `json:"card_type"` // 模板卡片类型
+	CardType              TemplateCardType    `json:"card_type"` // 模板卡片类型
 	Source                *Source             `json:"source,omitempty"`
 	ActionMenu            *ActionMenu         `json:"action_menu,omitempty"`
 	MainTitle             *MainTitle          `json:"main_title,omitempty"`
@@ -76,6 +76,16 @@ type TemplateCard struct {
 	Feedback              *Feedback           `json:"feedback,omitempty"`
 }
 
+// SourceDescColor represents source description color.
+type SourceDescColor int
+
+const (
+	SourceDescColorGray  SourceDescColor = 0
+	SourceDescColorBlack SourceDescColor = 1
+	SourceDescColorRed   SourceDescColor = 2
+	SourceDescColorGreen SourceDescColor = 3
+)
+
 // Source 表示卡片来源样式信息
 // 参数说明：
 //   - IconURL:   来源图片的URL
@@ -86,9 +96,9 @@ type TemplateCard struct {
 //     2: 红色
 //     3: 绿色
 type Source struct {
-	IconURL   string `json:"icon_url,omitempty"`   // 来源图片URL
-	Desc      string `json:"desc,omitempty"`       // 来源描述，建议不超过13个字
-	DescColor int    `json:"desc_color,omitempty"` // 来源文字颜色：0-灰色 1-黑色 2-红色 3-绿色
+	IconURL   string          `json:"icon_url,omitempty"`   // 来源图片URL
+	Desc      string          `json:"desc,omitempty"`       // 来源描述，建议不超过13个字
+	DescColor SourceDescColor `json:"desc_color,omitempty"` // 来源文字颜色：0-灰色 1-黑色 2-红色 3-绿色
 }
 
 // ActionMenu 表示卡片右上角更多操作按钮
@@ -130,6 +140,15 @@ type EmphasisContent struct {
 	Desc  string `json:"desc,omitempty"`  // 数据描述，建议不超过15个字
 }
 
+// QuoteAreaType represents quote area click types.
+type QuoteAreaType int
+
+const (
+	QuoteAreaTypeNone   QuoteAreaType = 0
+	QuoteAreaTypeURL    QuoteAreaType = 1
+	QuoteAreaTypeApplet QuoteAreaType = 2
+)
+
 // QuoteArea 表示引用文献样式
 // 建议不与关键数据样式共用
 // 参数说明：
@@ -143,13 +162,22 @@ type EmphasisContent struct {
 //   - Title:     引用文献样式的标题
 //   - QuoteText: 引用文献样式的引用文案
 type QuoteArea struct {
-	Type      int    `json:"type,omitempty"`       // 点击事件类型：0-无 1-跳转URL 2-跳转小程序
-	URL       string `json:"url,omitempty"`        // 跳转URL（type=1时必填）
-	AppID     string `json:"appid,omitempty"`      // 小程序AppID（type=2时必填）
-	PagePath  string `json:"pagepath,omitempty"`   // 小程序页面路径（type=2时选填）
-	Title     string `json:"title,omitempty"`      // 引用标题
-	QuoteText string `json:"quote_text,omitempty"` // 引用文案
+	Type      QuoteAreaType `json:"type,omitempty"`       // 点击事件类型：0-无 1-跳转URL 2-跳转小程序
+	URL       string        `json:"url,omitempty"`        // 跳转URL（type=1时必填）
+	AppID     string        `json:"appid,omitempty"`      // 小程序AppID（type=2时必填）
+	PagePath  string        `json:"pagepath,omitempty"`   // 小程序页面路径（type=2时选填）
+	Title     string        `json:"title,omitempty"`      // 引用标题
+	QuoteText string        `json:"quote_text,omitempty"` // 引用文案
 }
+
+// HorizontalContentType represents link types for horizontal content.
+type HorizontalContentType int
+
+const (
+	HorizontalContentTypeText   HorizontalContentType = 0
+	HorizontalContentTypeURL    HorizontalContentType = 1
+	HorizontalContentTypeUserID HorizontalContentType = 3
+)
 
 // HorizontalContent 表示二级标题+文本列表
 // 列表长度不超过6
@@ -163,12 +191,22 @@ type QuoteArea struct {
 //   - URL:     链接跳转的URL，type是1时必填
 //   - UserID:  成员详情的userid，type是3时必填
 type HorizontalContent struct {
-	Type    int    `json:"type,omitempty"`   // 链接类型：0-文本 1-跳转URL 3-成员详情
-	KeyName string `json:"keyname"`          // 二级标题，建议不超过5个字
-	Value   string `json:"value,omitempty"`  // 二级文本，建议不超过26个字
-	URL     string `json:"url,omitempty"`    // 跳转URL（type=1时必填）
-	UserID  string `json:"userid,omitempty"` // 成员UserID（type=3时必填）
+	Type    HorizontalContentType `json:"type,omitempty"`   // 链接类型：0-文本 1-跳转URL 3-成员详情
+	KeyName string                `json:"keyname"`          // 二级标题，建议不超过5个字
+	Value   string                `json:"value,omitempty"`  // 二级文本，建议不超过26个字
+	URL     string                `json:"url,omitempty"`    // 跳转URL（type=1时必填）
+	UserID  string                `json:"userid,omitempty"` // 成员UserID（type=3时必填）
 }
+
+// JumpActionType represents jump action types.
+type JumpActionType int
+
+const (
+	JumpActionTypeNone     JumpActionType = 0
+	JumpActionTypeURL      JumpActionType = 1
+	JumpActionTypeApplet   JumpActionType = 2
+	JumpActionTypeQuestion JumpActionType = 3
+)
 
 // JumpAction 表示跳转指引样式的列表
 // 列表长度不超过3
@@ -185,13 +223,22 @@ type HorizontalContent struct {
 //   - AppID:    跳转链接的小程序的appid，type是2时必填
 //   - PagePath: 跳转链接的小程序的pagepath，type是2时选填
 type JumpAction struct {
-	Type     int    `json:"type,omitempty"`     // 跳转类型：0-无 1-URL 2-小程序 3-智能回复
-	Question string `json:"question,omitempty"` // 智能问答问题（type=3时必填，最长200字节）
-	Title    string `json:"title"`              // 文案内容，建议不超过13个字
-	URL      string `json:"url,omitempty"`      // 跳转URL（type=1时必填）
-	AppID    string `json:"appid,omitempty"`    // 小程序AppID（type=2时必填）
-	PagePath string `json:"pagepath,omitempty"` // 小程序页面路径（type=2时选填）
+	Type     JumpActionType `json:"type,omitempty"`     // 跳转类型：0-无 1-URL 2-小程序 3-智能回复
+	Question string         `json:"question,omitempty"` // 智能问答问题（type=3时必填，最长200字节）
+	Title    string         `json:"title"`              // 文案内容，建议不超过13个字
+	URL      string         `json:"url,omitempty"`      // 跳转URL（type=1时必填）
+	AppID    string         `json:"appid,omitempty"`    // 小程序AppID（type=2时必填）
+	PagePath string         `json:"pagepath,omitempty"` // 小程序页面路径（type=2时选填）
 }
+
+// CardActionType represents overall card action types.
+type CardActionType int
+
+const (
+	CardActionTypeNone   CardActionType = 0
+	CardActionTypeURL    CardActionType = 1
+	CardActionTypeApplet CardActionType = 2
+)
 
 // CardAction 表示整体卡片的点击跳转事件
 // 参数说明：
@@ -204,10 +251,10 @@ type JumpAction struct {
 //   - AppID:    跳转事件的小程序的appid，type是2时必填
 //   - PagePath: 跳转事件的小程序的pagepath，type是2时选填
 type CardAction struct {
-	Type     int    `json:"type"`               // 跳转类型：0-无 1-URL 2-小程序（text_notice必须为1或2）
-	URL      string `json:"url,omitempty"`      // 跳转URL（type=1时必填）
-	AppID    string `json:"appid,omitempty"`    // 小程序AppID（type=2时必填）
-	PagePath string `json:"pagepath,omitempty"` // 小程序页面路径（type=2时选填）
+	Type     CardActionType `json:"type"`               // 跳转类型：0-无 1-URL 2-小程序（text_notice必须为1或2）
+	URL      string         `json:"url,omitempty"`      // 跳转URL（type=1时必填）
+	AppID    string         `json:"appid,omitempty"`    // 小程序AppID（type=2时必填）
+	PagePath string         `json:"pagepath,omitempty"` // 小程序页面路径（type=2时选填）
 }
 
 // VerticalContent 表示卡片二级垂直内容
@@ -230,6 +277,15 @@ type CardImage struct {
 	AspectRatio float64 `json:"aspect_ratio,omitempty"` // 图片宽高比：1.3-2.25，默认1.3
 }
 
+// ImageTextAreaType represents image-text area click types.
+type ImageTextAreaType int
+
+const (
+	ImageTextAreaTypeNone   ImageTextAreaType = 0
+	ImageTextAreaTypeURL    ImageTextAreaType = 1
+	ImageTextAreaTypeApplet ImageTextAreaType = 2
+)
+
 // ImageTextArea 表示左图右文样式
 // news_notice类型的卡片，card_image和image_text_area两者必填一个字段，不可都不填
 // 参数说明：
@@ -244,13 +300,13 @@ type CardImage struct {
 //   - Desc:     左图右文样式的描述
 //   - ImageURL: 左图右文样式的图片URL（必填）
 type ImageTextArea struct {
-	Type     int    `json:"type,omitempty"`     // 点击事件类型：0-无 1-URL 2-小程序
-	URL      string `json:"url,omitempty"`      // 跳转URL（type=1时必填）
-	AppID    string `json:"appid,omitempty"`    // 小程序AppID（type=2时必填）
-	PagePath string `json:"pagepath,omitempty"` // 小程序页面路径（type=2时选填）
-	Title    string `json:"title,omitempty"`    // 标题
-	Desc     string `json:"desc,omitempty"`     // 描述
-	ImageURL string `json:"image_url"`          // 图片URL
+	Type     ImageTextAreaType `json:"type,omitempty"`     // 点击事件类型：0-无 1-URL 2-小程序
+	URL      string            `json:"url,omitempty"`      // 跳转URL（type=1时必填）
+	AppID    string            `json:"appid,omitempty"`    // 小程序AppID（type=2时必填）
+	PagePath string            `json:"pagepath,omitempty"` // 小程序页面路径（type=2时选填）
+	Title    string            `json:"title,omitempty"`    // 标题
+	Desc     string            `json:"desc,omitempty"`     // 描述
+	ImageURL string            `json:"image_url"`          // 图片URL
 }
 
 // SelectionItem 表示下拉式的选择器列表
@@ -281,6 +337,16 @@ type SelectOption struct {
 	Text string `json:"text"` // 选项文案，建议不超过10个字
 }
 
+// ButtonStyle represents button style values.
+type ButtonStyle int
+
+const (
+	ButtonStylePrimary ButtonStyle = 1
+	ButtonStyleBlue    ButtonStyle = 2
+	ButtonStyleRed     ButtonStyle = 3
+	ButtonStyleGray    ButtonStyle = 4
+)
+
 // Button 表示按钮列表
 // 列表长度不超过6
 // 参数说明：
@@ -290,10 +356,18 @@ type SelectOption struct {
 //   - Key:   按钮key值，用户点击后会产生回调事件将本参数作为event_key返回
 //     最长支持1024字节，不可重复（必填）
 type Button struct {
-	Text  string `json:"text"`            // 按钮文案，建议不超过10个字
-	Style int    `json:"style,omitempty"` // 按钮样式：1-4，默认1
-	Key   string `json:"key"`             // 按钮key值，最长1024字节，不可重复
+	Text  string      `json:"text"`            // 按钮文案，建议不超过10个字
+	Style ButtonStyle `json:"style,omitempty"` // 按钮样式：1-4，默认1
+	Key   string      `json:"key"`             // 按钮key值，最长1024字节，不可重复
 }
+
+// CheckboxMode represents checkbox selection mode.
+type CheckboxMode int
+
+const (
+	CheckboxModeSingle CheckboxMode = 0
+	CheckboxModeMulti  CheckboxMode = 1
+)
 
 // Checkbox 表示选择题样式（用于投票选择模板卡片）
 // 参数说明：
@@ -306,7 +380,7 @@ type Button struct {
 type Checkbox struct {
 	QuestionKey string           `json:"question_key"`      // 选择题key值，最长1024字节
 	Disable     bool             `json:"disable,omitempty"` // 是否不可选（仅更新时有效）
-	Mode        int              `json:"mode,omitempty"`    // 选择模式：0-单选 1-多选，默认0
+	Mode        CheckboxMode     `json:"mode,omitempty"`    // 选择模式：0-单选 1-多选，默认0
 	OptionList  []CheckboxOption `json:"option_list"`       // 选项列表，1-20个
 }
 

@@ -1,12 +1,29 @@
 package wecomapi
 
+// ReplyMsgType represents msgtype values for passive replies.
+type ReplyMsgType string
+
+const (
+	ReplyMsgTypeText                   ReplyMsgType = "text"
+	ReplyMsgTypeTemplateCard           ReplyMsgType = "template_card"
+	ReplyMsgTypeStream                 ReplyMsgType = "stream"
+	ReplyMsgTypeStreamWithTemplateCard ReplyMsgType = "stream_with_template_card"
+)
+
+// ReplyResponseType represents response_type values for passive replies.
+type ReplyResponseType string
+
+const (
+	ReplyResponseTypeUpdateTemplateCard ReplyResponseType = "update_template_card"
+)
+
 // PassiveReply represents a passive reply to callback
 type PassiveReply struct {
-	MsgType      string        `json:"msgtype"`
+	MsgType      ReplyMsgType  `json:"msgtype,omitempty"`
 	Text         *Text         `json:"text,omitempty"`
 	TemplateCard *TemplateCard `json:"template_card,omitempty"`
 	Stream       *StreamReply  `json:"stream,omitempty"`
-	ResponseType string        `json:"response_type,omitempty"`
+	ResponseType ReplyResponseType `json:"response_type,omitempty"`
 	UserIDs      []string      `json:"userids,omitempty"`
 }
 
@@ -30,7 +47,7 @@ type ImageBase64 struct {
 // 注意：目前仅支持进入会话回调事件时被动回复文本消息
 func NewTextReply(content string) *PassiveReply {
 	return &PassiveReply{
-		MsgType: "text",
+		MsgType: ReplyMsgTypeText,
 		Text: &Text{
 			Content: content,
 		},
@@ -41,7 +58,7 @@ func NewTextReply(content string) *PassiveReply {
 // 支持进入会话回调事件或接收消息回调时被动回复
 func NewTemplateCardReply(card *TemplateCard) *PassiveReply {
 	return &PassiveReply{
-		MsgType:      "template_card",
+		MsgType:      ReplyMsgTypeTemplateCard,
 		TemplateCard: card,
 	}
 }
@@ -52,7 +69,7 @@ func NewTemplateCardReply(card *TemplateCard) *PassiveReply {
 // finish: 是否结束流式消息
 func NewStreamReply(id, content string, finish bool) *PassiveReply {
 	return &PassiveReply{
-		MsgType: "stream",
+		MsgType: ReplyMsgTypeStream,
 		Stream: &StreamReply{
 			ID:      id,
 			Content: content,
@@ -67,7 +84,7 @@ func NewStreamReply(id, content string, finish bool) *PassiveReply {
 // 注意：同一个消息只能回复一次模板卡片
 func NewStreamWithTemplateCardReply(stream *StreamReply, card *TemplateCard) *PassiveReply {
 	return &PassiveReply{
-		MsgType:      "stream_with_template_card",
+		MsgType:      ReplyMsgTypeStreamWithTemplateCard,
 		Stream:       stream,
 		TemplateCard: card,
 	}
@@ -79,7 +96,7 @@ func NewStreamWithTemplateCardReply(stream *StreamReply, card *TemplateCard) *Pa
 // card: 新的模板卡片内容，task_id需与回调收到的task_id一致
 func NewUpdateTemplateCardReply(userIDs []string, card *TemplateCard) *PassiveReply {
 	return &PassiveReply{
-		ResponseType: "update_template_card",
+		ResponseType: ReplyResponseTypeUpdateTemplateCard,
 		UserIDs:      userIDs,
 		TemplateCard: card,
 	}
