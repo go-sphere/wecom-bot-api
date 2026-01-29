@@ -1,4 +1,4 @@
-package wecombot
+package wecomapi
 
 import "errors"
 

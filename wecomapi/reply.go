@@ -1,4 +1,4 @@
-package wecombot
+package wecomapi
 
 // PassiveReply represents a passive reply to callback
 type PassiveReply struct {

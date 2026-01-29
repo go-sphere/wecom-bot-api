@@ -1,4 +1,4 @@
-// Package wecombot provides a complete SDK for building WeChat Work (企业微信) AI Bot applications.
+// Package wecomapi provides a complete SDK for building WeChat Work (企业微信) AI Bot applications.
 //
 // This package implements the full WeChat Work AI Bot API with support for:
 //   - Message callbacks (text, image, mixed, voice, file)
@@ -74,4 +74,4 @@
 //
 // For more information, see the official WeChat Work documentation:
 // https://developer.work.weixin.qq.com/document/path/100719
-package wecombot
+package wecomapi

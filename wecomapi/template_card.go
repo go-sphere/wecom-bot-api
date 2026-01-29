@@ -1,4 +1,4 @@
-package wecombot
+package wecomapi
 
 // TemplateCard 表示模板卡片消息
 // 企业微信智能机器人支持5种模板卡片类型：
