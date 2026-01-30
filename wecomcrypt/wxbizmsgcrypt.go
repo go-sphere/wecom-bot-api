@@ -104,15 +104,13 @@ func (p *JsonProcessor) Serialize(msgSend *WXBizJSONMessageSend) ([]byte, error)
 	return jsonMsg, nil
 }
 
-func NewWXBizMsgCrypt(token, encodingAESKey, receiverID string, protocolType ProtocolType) *WXBizMsgCrypt {
+func NewWXBizMsgCrypt(token, encodingAESKey, receiverID string, protocolType ProtocolType) (*WXBizMsgCrypt, error) {
 	var protocolProcessor ProtocolProcessor
 	if protocolType != JSONProtocol {
-		panic("unsupport protocal")
-	} else {
-		protocolProcessor = new(JsonProcessor)
+		return nil, NewCryptError(ErrIllegalProtocol, "protocol type not support")
 	}
-
-	return &WXBizMsgCrypt{token: token, encodingAESKey: (encodingAESKey + "="), receiverID: receiverID, protocolProcessor: protocolProcessor}
+	protocolProcessor = new(JsonProcessor)
+	return &WXBizMsgCrypt{token: token, encodingAESKey: encodingAESKey + "=", receiverID: receiverID, protocolProcessor: protocolProcessor}, nil
 }
 
 func (c *WXBizMsgCrypt) randString(n int) string {
