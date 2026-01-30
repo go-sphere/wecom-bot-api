@@ -8,7 +8,6 @@ A complete Go SDK for building WeChat Work (企业微信) AI Bot applications wi
 - Strong Typing: Type-safe structures for all API objects
 - Encryption/Decryption: AES-256-CBC encryption with PKCS#7 padding
 - Signature Verification: Constant-time signature comparison
-- HTTP Server: Ready-to-use `http.Handler` implementation
 - Active Replies: Client for sending messages via `response_url`
 - Stream Support: Handle streaming AI responses
 - Deduplication: Built-in message deduplication with TTL
@@ -18,7 +17,6 @@ A complete Go SDK for building WeChat Work (企业微信) AI Bot applications wi
 ## Documentation
 
 - [API Documentation](API.md)
-- [Examples](examples/)
 - [WeChat Work Official Docs](https://developer.work.weixin.qq.com/document/path/100719)
 
 ## License
