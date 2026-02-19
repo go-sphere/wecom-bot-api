@@ -156,11 +156,11 @@ type Quote struct {
 
 // Event 事件回调。
 type Event struct {
-	EventType         EventType              `json:"eventtype"`                     // 事件类型
-	EnterChat         *EnterChatEvent        `json:"enter_chat,omitempty"`          // 进入会话事件
-	TemplateCardEvent *TemplateCardEvent     `json:"template_card_event,omitempty"` // 模板卡片事件
-	FeedbackEvent     *FeedbackEvent         `json:"feedback_event,omitempty"`      // 用户反馈事件
-	RawData           map[string]interface{} `json:"-"`                             // 原始数据，用于自定义事件解析
+	EventType         EventType          `json:"eventtype"`                     // 事件类型
+	EnterChat         *EnterChatEvent    `json:"enter_chat,omitempty"`          // 进入会话事件
+	TemplateCardEvent *TemplateCardEvent `json:"template_card_event,omitempty"` // 模板卡片事件
+	FeedbackEvent     *FeedbackEvent     `json:"feedback_event,omitempty"`      // 用户反馈事件
+	RawData           map[string]any     `json:"-"`                             // 原始数据，用于自定义事件解析
 }
 
 // UnmarshalJSON 自定义反序列化，保存原始数据。
@@ -177,7 +177,7 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	}
 
 	// 保存原始数据，便于自定义解析
-	var raw map[string]interface{}
+	var raw map[string]any
 	if err := json.Unmarshal(data, &raw); err != nil {
 		return err
 	}
